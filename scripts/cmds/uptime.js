@@ -31,47 +31,40 @@ module.exports = {
         const upSt = `${h}H ${m}M ${s}S`;
 
         let threadInfo = await api.getThreadInfo(event.threadID);
-        const males = [];
-        const females = [];
-
-        for (let user of threadInfo.userInfo) {
-            if (user.gender === "MALE") {
-                males.push(user.name);
-            } else if (user.gender === "FEMALE") {
-                females.push(user.name);
-            }
-        }
-
-        const maleCount = males.length;
-        const femaleCount = females.length;
+        const males = threadInfo.userInfo.filter(user => user.gender === "MALE").length;
+        const females = threadInfo.userInfo.filter(user => user.gender === "FEMALE").length;
         const users = await usersData.getAll();
         const threads = await threadsData.getAll();
+
         const totalMemory = os.totalmem();
         const freeMemory = os.freemem();
         const usedMemory = totalMemory - freeMemory;
         const system = `${os.platform()} ${os.release()}`;
         const model = `${os.cpus()[0].model}`;
-        const cores = `${os.cpus().length}`;
+        const cores = os.cpus().length;
         const processMemory = prettyBytes(process.memoryUsage().rss);
 
-        const boxMessage = `
-╔════════════════════════════╗
-║  HAXOR SOHAN & CK KING    ║
-╠════════════════════════════╣
-║ ⏳ Uptime: ${upSt}              ║
-║ 👨 Males: ${maleCount}               ║
-║ 👩 Females: ${femaleCount}            ║
-║ 🌍 Users: ${users.length}             ║
-║ 🏠 Groups: ${threads.length}          ║
-║ 💻 OS: ${system}              ║
-║ ⚙️ CPU: ${model}              ║
-║ 🔢 Cores: ${cores}             ║
-║ 📂 Memory: ${prettyBytes(usedMemory)} / ${prettyBytes(totalMemory)} ║
-╚════════════════════════════╝
+        const messageBody = `
+🔥 *System Status Report* 🔥
+
+⏳ *Uptime:* ${upSt}
+👨 *Males:* ${males}  
+👩 *Females:* ${females}  
+🌍 *Total Users:* ${users.length}  
+🏠 *Total Groups:* ${threads.length}  
+
+💻 *Operating System:* ${system}  
+⚙️ *CPU Model:* ${model}  
+🔢 *Cores:* ${cores}  
+
+📂 *Memory Usage:* ${prettyBytes(usedMemory)} / ${prettyBytes(totalMemory)}
+🔋 *Process Memory:* ${processMemory}  
+
+🚀 *Powered by HAXOR SOHAN & CK KING*  
 `;
 
         message.reply({
-            body: boxMessage,
+            body: messageBody,
             attachment: await global.utils.getStreamFromURL(iURL)
         }, event.threadID);
     }
@@ -91,4 +84,4 @@ function prettyBytes(bytes) {
         i++;
     }
     return `${bytes.toFixed(2)} ${units[i]}`;
-        }
+}
