@@ -1,7 +1,7 @@
 const reactions = [
-  { keywords: ["adnan", "hi"], emoji: "🗿" },
+  { keywords: ["adnan", "hi"], emoji: "❤️" },
   { keywords: ["elisa", "kiss", "love", "lab", "ilove", "alabu", "merry", "crush", "kilig", "sex", "baby", "horn", "angel"], emoji: "❤" },
-  { keywords: ["sakit", "sad", "pain", "mood", "depress", "stress"], emoji: "😿" },
+  { keywords: ["sakit", "sad", "pain", "mood", "depress", "stress"], emoji: "😔" },
   { keywords: ["koro", "koren"], emoji: "🐥" },
   { keywords: ["morning", "night", "eat", "evening"], emoji: "❤" },
   { keywords: ["wow", "robot"], emoji: "😮" }
