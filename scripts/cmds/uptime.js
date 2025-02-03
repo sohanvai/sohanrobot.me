@@ -10,71 +10,53 @@ module.exports = {
         author: "VEX_ADNAN",
         countDown: 5,
         role: 0,
-        shortDescription: {
-            en: "Shows system uptime and info."
-        },
-        longDescription: {
-            en: "Displays uptime, memory, CPU, and other system details."
-        },
+        shortDescription: { en: "System uptime and stats" },
+        longDescription: { en: "Displays uptime, memory, CPU, and system details." },
         category: "SYSTEM",
-        guide: {
-            en: "{pn}"
-        }
+        guide: { en: "{pn}" }
     },
 
-    onStart: async function ({ message, event, args, api, usersData, threadsData }) {
-        const iURL = "https://i.imgur.com/4uggLXJ.jpeg"; // Fixed photo link
+    onStart: async function ({ message, event, api, usersData, threadsData }) {
+        const iURL = "https://i.imgur.com/0yoUfGB.jpeg"; 
         const uptime = process.uptime();
         const s = Math.floor(uptime % 60);
         const m = Math.floor((uptime / 60) % 60);
         const h = Math.floor((uptime / (60 * 60)) % 24);
-        const upSt = `${h}H ${m}M ${s}S`;
+        const upSt = `${h}𝗛 ${m}𝗠 ${s}𝗦`;
 
         let threadInfo = await api.getThreadInfo(event.threadID);
         const males = threadInfo.userInfo.filter(user => user.gender === "MALE").length;
         const females = threadInfo.userInfo.filter(user => user.gender === "FEMALE").length;
         const users = await usersData.getAll();
         const threads = await threadsData.getAll();
-
-        const totalMemory = os.totalmem();
-        const freeMemory = os.freemem();
-        const usedMemory = totalMemory - freeMemory;
+        const totalMemory = prettyBytes(os.totalmem());
+        const usedMemory = prettyBytes(os.totalmem() - os.freemem());
         const system = `${os.platform()} ${os.release()}`;
-        const model = `${os.cpus()[0].model}`;
+        const model = os.cpus()[0].model;
         const cores = os.cpus().length;
-        const processMemory = prettyBytes(process.memoryUsage().rss);
 
-        const messageBody = `
-🔥 *System Status Report* 🔥
-
-⏳ *Uptime:* ${upSt}
-👨 *Males:* ${males}  
-👩 *Females:* ${females}  
-🌍 *Total Users:* ${users.length}  
-🏠 *Total Groups:* ${threads.length}  
-
-💻 *Operating System:* ${system}  
-⚙️ *CPU Model:* ${model}  
-🔢 *Cores:* ${cores}  
-
-📂 *Memory Usage:* ${prettyBytes(usedMemory)} / ${prettyBytes(totalMemory)}
-🔋 *Process Memory:* ${processMemory}  
-
-🚀 *Powered by HAXOR SOHAN & CK KING*  
+        const status = `
+╭───────────∘°❉°∘───────────╮
+      ✦ 𝗦𝗬𝗦𝗧𝗘𝗠 𝗦𝗧𝗔𝗧𝗨𝗦 ✦
+╰───────────∘°❉°∘───────────╯
+✦ ⏳ 𝗨𝗽𝘁𝗶𝗺𝗲: ${upSt}
+✦ 👨 𝗕𝗼𝘆𝘀: ${males} | 👩 𝗚𝗶𝗿𝗹𝘀: ${females}
+✦ 🌍 𝗨𝘀𝗲𝗿𝘀: ${users.length} | 🏠 𝗚𝗿𝗼𝘂𝗽𝘀: ${threads.length}
+✦ 💻 𝗢𝗦: ${system}
+✦ ⚙️ 𝗖𝗣𝗨: ${model} (${cores} 𝗖𝗼𝗿𝗲𝘀)
+✦ 📂 𝗠𝗲𝗺𝗼𝗿𝘆: ${usedMemory} / ${totalMemory}
+╭───────────∘°❉°∘───────────╮
+    ⚡ 𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗕𝘆:
+  🛠 𝗛𝗮𝘅𝗼𝗿 𝗦𝗼𝗵𝗮𝗻 & 𝗖𝗸 𝗞𝗶𝗻𝗴
+╰───────────∘°❉°∘───────────╯
 `;
 
         message.reply({
-            body: messageBody,
+            body: status,
             attachment: await global.utils.getStreamFromURL(iURL)
         }, event.threadID);
     }
 };
-
-async function getDiskUsage() {
-    const { stdout } = await exec('df -k /');
-    const [_, total, used] = stdout.split('\n')[1].split(/\s+/).filter(Boolean);
-    return { total: parseInt(total) * 1024, used: parseInt(used) * 1024 };
-}
 
 function prettyBytes(bytes) {
     const units = ['B', 'KB', 'MB', 'GB', 'TB'];
