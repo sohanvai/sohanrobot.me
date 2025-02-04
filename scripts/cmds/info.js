@@ -30,7 +30,7 @@ module.exports = {
 			prefix: global.GoatBot.config.prefix
 		};
 
-		const videoLink = "https://i.imgur.com/6jNIPSg.mp4";
+		const videoLink = "https://i.imgur.com/coBQ5BN.mp4";
 
 		const now = moment().tz('Asia/Jakarta');
 		const date = now.format('MMMM Do YYYY');
